@@ -1,0 +1,13 @@
+Hi! :)
+Well done!
+
+4
+a) -0.25
+EmailPromotion has no condition like "it's not EQUAL", it has condition "it's non INCLUDING".
+Correct answer:
+SELECT COUNT(DISTINCT PersonType) AS DistinctCount
+FROM Person.Person
+WHERE LastName LIKE 'M%' 
+		OR NOT EmailPromotion LIKE '%1%'
+
+Mark: 10
