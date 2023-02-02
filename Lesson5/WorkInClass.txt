@@ -1,0 +1,25 @@
+1.
+SELECT *
+FROM Driver
+WHERE Address = 'eee' 
+	AND 
+	(Experience NOT IN (3,5,6,10))
+
+
+2.
+SELECT dr.PassNumber
+FROM Driver dr
+	LEFT JOIN Dispetcherskaya disp
+	ON dr.DriverID=disp.DriverID
+WHERE disp.DriverID IS NULL
+
+3.
+SELECT c.CarRegNumber, disp.TimeArrival, disp.TimeDeparture, r.Destination
+FROM Dispetcherskaya disp 
+	LEFT JOIN Car c ON c.CarID = disp.CarID
+	LEFT JOIN Route r ON r.RouteID = c.RouteID
+WHERE c.YearOfManufacture ='2015'
+
+
+
+	
