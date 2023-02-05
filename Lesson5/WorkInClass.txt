@@ -21,5 +21,4 @@ FROM Dispetcherskaya disp
 WHERE c.YearOfManufacture ='2015'
 
 
-
-	
+Mark: 10
