@@ -1,0 +1,9 @@
+Hi! :)
+
+Well done!
+
+11
+-1
+There's no need to create a function, only a variable.
+
+Mark: 9
