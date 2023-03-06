@@ -1,0 +1,8 @@
+Hi)
+Well done!
+
+No negative comments, great job!
+As I got it, code page is smth like a text format and you had error which is similar to unequal types of column. 
+The main thing - your solution helped. Nothing is incorrect if it solves the task :)
+
+Mark: 10
