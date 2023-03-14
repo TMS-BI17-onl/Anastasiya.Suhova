@@ -1,0 +1,67 @@
+1. 
+SELECT ProductSubcategoryID, MIN(Weight) as Min_Weight
+FROM Production.Product
+GROUP BY ProductSubcategoryID
+HAVING MIN(Weight)>150
+
+2.
+2.1
+SELECT ProductID, StandardCost
+FROM Production.Product
+WHERE StandardCost =	(SELECT MAX(StandardCost)
+			 FROM Production.Product)
+
+2.2
+SELECT ProductID, StandardCost
+FROM (	SELECT ProductID, StandardCost, MAX(StandardCost) OVER() as Max_StandartCost
+	FROM Production.Product) t
+WHERE StandardCost = Max_StandartCost
+
+2.3
+SELECT ProductID, StandardCost
+FROM (	SELECT ProductID, StandardCost, RANK() OVER(Order by StandardCost DESC) as rnk
+	FROM Production.Product) t
+WHERE rnk = 1
+
+2.4
+SELECT TOP 1 WITH TIES ProductID, StandardCost
+FROM Production.Product
+ORDER BY StandardCost DESC
+
+3.
+3.1
+SELECT IDCustomer
+FROM DimCustomers c LEFT JOIN 
+	(
+	SELECT IDCustomer
+	FROM FctOrders
+	WHERE Rent_Date>= DATEFROMPARTS(YEAR(GETDATE())-1, MONTH (GETDATE()), DAY(GETDATE())) 
+	) o 
+	ON c.IDCustomer=o.IDCustomer
+WHERE IDCustomer IS NULL
+
+3.2
+
+SELECT IDCustomer
+FROM DimCustomers
+
+EXCEPT
+
+SELECT IDCustomer
+FROM FctOrders
+WHERE Rent_Date>= DATEFROMPARTS(YEAR(GETDATE())-1, MONTH (GETDATE()), DAY(GETDATE()))
+
+4.
+SELECT o.Employee_Number, e.FullName, COUNT (o.Id_Order) as cnt
+FROM FctOrders o JOIN DimEmployees e ON o.Employee_Number=e.Employee_Number
+WHERE Rent_Date>= DATEFROMPARTS(YEAR(GETDATE())-5, MONTH (GETDATE()), DAY(GETDATE()))
+GROUP BY Employee_Number 
+
+5.
+SELECT *
+FROM 
+	(SELECT n.category as category , n.user_id as user_id, u.email as email, COUNT (n.id) as cnt_notif
+	FROM Notifications n LEFT JOIN Users u ON n.user_id=u.id
+	GROUP BY n.category, u.user_id, u.email) t
+WHERE email = 'alex@gmail.com' AND cnt_notif>50
+
