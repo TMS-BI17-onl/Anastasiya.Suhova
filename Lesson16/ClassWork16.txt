@@ -65,3 +65,5 @@ FROM
 	GROUP BY n.category, u.user_id, u.email) t
 WHERE email = 'alex@gmail.com' AND cnt_notif>50
 
+Mark:10 
+
