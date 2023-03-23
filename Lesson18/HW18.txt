@@ -1,0 +1,82 @@
+1.
+SELECT e2.FirstName, e2.LastName, COUNT(e1.Employee _ID) as cnt
+FROM Employees e1 JOIN Employees e2 ON e1.Employee_ID=e2.Manager_ID
+GROUP BY e2.FirstName, e2.LastName
+HAVING COUNT(Employee _ID)>6
+
+2.
+SELECT 	Department_Name, 
+MIN((Salary*(1- commission_pct/100))) as MIN_salary, 
+MAX((Salary*(1- commission_pct/100))) as MAX_salary
+FROM Employees e JOIN Departments d ON e.Department_ID=d.Department_ID
+GROUP BY Department_Name
+
+3.1
+SELECT TOP 1 WITH TIES t.Region_Name
+FROM
+	(SELECT r.Region_Name, COUNT(e.Employee_ID) as cnt
+	FROM Employees e 
+		JOIN Departments d ON d.Departament_ID=e. Departament_ID
+		JOIN Locations l ON l.Location_ID=d.Location_ID
+		JOIN Countries c ON l.Country_ID=c.Country_ID
+		JOIN Regions r ON r.Region_ID=c.Region_ID
+	GROUP BY r.Region_Name
+	) t
+ORDER BY cnt DESC
+
+3.2
+SELECT Region_Name
+FROM
+	(SELECT r.Region_Name, COUNT(e.Employee_ID) as cnt_emp, MAX(COUNT(e.Employee_ID)) OVER (PARTITION BY r.Region_Name) as max_cnt_emp
+	FROM Employees e 
+		JOIN Departments d ON d.Departament_ID=e. Departament_ID
+		JOIN Locations l ON l.Location_ID=d.Location_ID
+		JOIN Countries c ON l.Country_ID=c.Country_ID
+		JOIN Regions r ON r.Region_ID=c.Region_ID
+	GROUP BY r.Region_Name) t
+WHERE cnt_emp= max_cnt_emp
+
+3.3
+SELECT Region_Name
+FROM
+	(SELECT r.Region_Name, COUNT(e.Employee_ID) as cnt_emp, RANK(COUNT(e.Employee_ID)) OVER (ORDER BY COUNT(e.Employee_ID) DESC) as rnk
+	FROM Employees e 
+		JOIN Departments d ON d.Departament_ID=e. Departament_ID
+		JOIN Locations l ON l.Location_ID=d.Location_ID
+		JOIN Countries c ON l.Country_ID=c.Country_ID
+		JOIN Regions r ON r.Region_ID=c.Region_ID
+	GROUP BY r.Region_Name) t
+WHERE rnk=1
+
+4.
+WITH cte dep_salary (dep_name, avg_salary_dep, total_avg_salary)
+AS
+(
+SELECT 	d.Department_Name, 
+	AVG(e.Salary) OVER(PARTITION BY d.Department_Name) as avg_salary_dep, 
+	AVG(e.Salary)OVER() total_avg_salary
+FROM Employees e JOIN Departments d ON e.Department_ID=d. Department_ID
+)
+SELECT dep_name, CONCAT ( (((avg_salary_dep/ total_avg)-1)*100), “%”) as diff_salary
+FROM cte dep_salary
+
+5.
+SELECT Employee_ID
+FROM Employees
+WHERE Datediff (YEAR, Hire_Date, GETDATE())>=10
+
+6.
+SELECT Employee_ID
+FROM
+	(
+	SELECT Employee_ID, RANK(Salary) OVER (ORDER BY Salary Desc) as rnk
+	FROM Employees
+	) t
+WHERE rnk BETWEEN 5 AND 10
+
+
+
+
+
+
+
